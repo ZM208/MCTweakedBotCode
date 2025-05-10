@@ -1,5 +1,3 @@
-local args = {...}
-stringtoboolean={ ["true"]=true, ["false"]=false }
 function MineArea(length, height, width, up, right)
     length = length - 1
     for hei = 1, height do 
@@ -68,9 +66,4 @@ function moveForward(forwardAmount)
         turtle.forward()
     end
 end
-if #args < 5 then 
-    print("please enter the following args: length, width, height, up?, right?")
-else    
-    print(args[1])
-    MineArea(tonumber(args[1]), tonumber(args[2]), tonumber(args[3]), stringtoboolean[args[4]], stringtoboolean[args[5]])
-end 
+

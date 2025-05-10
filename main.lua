@@ -2,9 +2,10 @@ local miner = require("Miner");
 local http = require("http")
 local connectionUrl = ""; 
 local name = args[1]; 
+local job = args[2];
 local activeWebSocket;
+local textutils = require("textutils")
 local wsError; 
-
 function Main()
     while true do 
         if (wsError ~= nil) then 
@@ -29,16 +30,25 @@ function AttemptConnection()
     end 
 end 
 function ResponseHandler(message)
-    if (message == "UpdateInfo") then  
-
+    local args = DecryptMessage(message);
+    if (args["target"] == "UpdateInfo") then  
+        local message = {}
+        message["target"] = "UpdateInfo";
+        message["name"] = name;
+        message["Job"] = job
+        message["currentlyWorking"] = false;
+        PrepareMessageAndSend(message)
+    end
+    if (args["target"] == "MineArea") then 
+        MineArea(args["length"],args["height"],args["width"],args["goUp"],args["goRight"])
     end
 end 
 
-function PrepareMessage()
-
+function PrepareMessageAndSend(args)
+     activeWebSocket.send(textutils.serialiseJSON(args))
 end 
 
-function DecryptMessage()
-
+function DecryptMessage(message)
+    return textutils.DecryptMessage(message)
 end 
 Main()
