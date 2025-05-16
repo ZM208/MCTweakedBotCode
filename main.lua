@@ -51,6 +51,7 @@ print(message)
         message["Job"] = job
         message["CurrentlyWorking"] = false;
         PrepareMessageAndSend(message)
+        print("sent update response")
     end
     if (args["Command"] == "MineArea") then 
         MineArea(args["Length"],args["Height"],args["Width"],args["GoUp"],args["GoRight"])
@@ -58,11 +59,13 @@ print(message)
 end 
 
 function PrepareMessageAndSend(args)
-     activeWebSocket.send(textutils.serialiseJSON(args))
+    print("preparing message.")
+    activeWebSocket.send(textutils.serialiseJSON(args))
+    print("sent message")
 end 
 
 function DecryptMessage(message)
-    return  textutils.unserialiseJSON(message)
+    return textutils.unserialiseJSON(message)
 end 
 function Sleep(seconds)
     os.sleep(seconds)
