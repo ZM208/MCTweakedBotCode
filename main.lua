@@ -40,10 +40,10 @@ function ResponseHandler(message)
     if (args["target"] == "UpdateInfo") then  
         print("UpdateInfo detected sending update response")
         local message = {}
-        message["target"] = "UpdateInfo";
-        message["name"] = name;
+        message["Target"] = "UpdateInfo";
+        message["Name"] = name;
         message["Job"] = job
-        message["currentlyWorking"] = false;
+        message["CurrentlyWorking"] = false;
         PrepareMessageAndSend(message)
         print("sent update response")
     end
