@@ -1,11 +1,10 @@
 require("miner");
-local connectionUrl = ""; 
+local connectionUrl = ""; -- your websocket server url here
 local args = {...}
 local name = args[1]; 
 local job = args[2];
-local activeWebSocket;
-local wsError; 
-
+activeWebSocket = nil;
+wsError = nil ; 
 function Main()
     while true do 
       print("checking websocket connection")
@@ -17,12 +16,19 @@ function Main()
         if (activeWebSocket == nil) then
             print("websocket not detected starting connection attempt.")
             AttemptConnection()
-        end 
-        ResponseHandler(activeWebSocket.recieve())
+        end
+        if not pcall(WaitForMessage) then 
+            activeWebSocket = nil
+            end
+    end  
+end 
+ 
+function WaitForMessage()
+    local message = activeWebSocket.receive()
+    if (message ~= nil) then
+        ResponseHandler(message)
     end 
 end 
-
-
 function AttemptConnection()
     while true do 
         print("attempting to connect to websocket")
@@ -31,14 +37,14 @@ function AttemptConnection()
             return activeWebSocket;
         end 
         print("failed to connect. Trying again in 60 secs.")
-        os.sleep(60);
+        Sleep(60);
     end 
 end 
 function ResponseHandler(message)
-    print("recieved message from server")
-    local args = DecryptMessage(message);
-    if (args["target"] == "UpdateInfo") then  
-        print("UpdateInfo detected sending update response")
+print(message)
+     args = DecryptMessage(message);
+    print(args)
+    if (args["Target"] == "UpdateInfo") then  
         local message = {}
         message["Target"] = "UpdateInfo";
         message["Name"] = name;
@@ -47,9 +53,8 @@ function ResponseHandler(message)
         PrepareMessageAndSend(message)
         print("sent update response")
     end
-    if (args["target"] == "MineArea") then 
-        print("minearea detected executing minearea")
-        MineArea(args["length"],args["height"],args["width"],args["goUp"],args["goRight"])
+    if (args["Command"] == "MineArea") then 
+        MineArea(args["Length"],args["Height"],args["Width"],args["GoUp"],args["GoRight"])
     end
 end 
 
@@ -60,8 +65,9 @@ function PrepareMessageAndSend(args)
 end 
 
 function DecryptMessage(message)
-    print("decrypting response message.")
-    return textutils.DecryptMessage(message)
+    return textutils.unserialiseJSON(message)
 end 
-
-Main()
+function Sleep(seconds)
+    os.sleep(seconds)
+end 
+Main() 
