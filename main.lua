@@ -1,4 +1,6 @@
 require("miner");
+require("generalCommands");
+
 local connectionUrl = ""; -- your websocket server url here
 local args = {...}
 local name = args[1]; 
@@ -55,6 +57,10 @@ print(message)
     end
     if (args["Command"] == "MineArea") then 
         MineArea(args["Length"],args["Height"],args["Width"],args["GoUp"],args["GoRight"])
+    end
+
+    if (args["Command"] == "RemoteControl") then 
+        MoveBot(args["Direction"],args["Times"])
     end
 end 
 
