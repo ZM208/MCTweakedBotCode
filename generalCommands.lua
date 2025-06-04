@@ -7,7 +7,7 @@ local switch = {
   ["Right"] = function() turtle.turnRight() end,
   ["Forward"] = function() turtle.forward() end
 }
-for execute = 0, times do
+for execute = 1, times do
   switch[direction]();
 end 
 end 
