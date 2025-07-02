@@ -77,3 +77,11 @@ function Sleep(seconds)
     os.sleep(seconds)
 end 
 Main() 
+
+function GetInventory()
+
+end 
+
+function EditInventory()
+
+end 
