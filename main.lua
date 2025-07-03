@@ -54,7 +54,12 @@ print(message)
         message["CurrentlyWorking"] = false;
         PrepareMessageAndSend(message)
         print("sent update response")
-    end
+    end 
+    if (args["Target"] == "GetInventory") then
+        local inventory = GetInventory();
+        PrepareMessageAndSend(inventory);
+        print("sent inventory")
+    end 
     if (args["Command"] == "MineArea") then 
         MineArea(args["Length"],args["Height"],args["Width"],args["GoUp"],args["GoRight"])
     end
