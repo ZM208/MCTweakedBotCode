@@ -1,4 +1,6 @@
 require("miner");
+require("generalCommands");
+
 local connectionUrl = ""; -- your websocket server url here
 local args = {...}
 local name = args[1]; 
@@ -52,9 +54,18 @@ print(message)
         message["CurrentlyWorking"] = false;
         PrepareMessageAndSend(message)
         print("sent update response")
-    end
+    end 
+    if (args["Target"] == "GetInventory") then
+        local inventory = GetInventory();
+        PrepareMessageAndSend(inventory);
+        print("sent inventory")
+    end 
     if (args["Command"] == "MineArea") then 
         MineArea(args["Length"],args["Height"],args["Width"],args["GoUp"],args["GoRight"])
+    end
+
+    if (args["Command"] == "RemoteControl") then 
+        MoveBot(args["Direction"],args["Times"])
     end
 end 
 
@@ -71,3 +82,11 @@ function Sleep(seconds)
     os.sleep(seconds)
 end 
 Main() 
+
+function GetInventory()
+
+end 
+
+function EditInventory()
+
+end 
