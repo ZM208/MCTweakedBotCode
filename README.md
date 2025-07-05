@@ -1,1 +1,1 @@
-# WIP lua code for bot to do different stuff
+# WIP lua code for turtles to do different stuff
