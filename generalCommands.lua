@@ -1,24 +1,30 @@
-FacingIndex = 1
-FacingDirections = {"forward", "left", "back", "right"}
+local facingIndex = 1
 
+--- movement enums wish version
+MovementUp = 1
+MovementDown = 2
+MovementForward = 3
+MovementBackwards = 4
 local movementdirection = {
   ["Up"] =  function() turtle.up() end,
   ["Down"] = function() turtle.down() end,
   ["Forward"] = function() turtle.forward() end,
   ["Backwards"] = function() turtle.back() end
 }
-
-Front = 1
-Left = 2
-Back = 3 
-Right = 4
+--- facing  enums wish version
+FacingFront = 1
+FacingLeft = 2
+FacingBack = 3 
+FacingRight = 4
+local FacingDirections = {"forward", "left", "back", "right"}
+-- movement based commands 
 function TurnLeft()
-  FacingIndex = CalculateValidFacingIndex(FacingIndex + 1)
+  facingIndex = CalculateValidFacingIndex(facingIndex + 1)
   turtle.turnLeft()
 end 
 
 function TurnRight()
-  FacingIndex = CalculateValidFacingIndex(FacingIndex - 1)
+  facingIndex = CalculateValidFacingIndex(facingIndex - 1)
   turtle.turnRight()
 end
 
@@ -34,19 +40,31 @@ end
 
 function FaceDirection(faceIndex)
   if (faceIndex == CalculateValidFacingIndex(faceIndex + 1)) then
-    while (FacingIndex == faceIndex) do 
+    while (facingIndex == faceIndex) do 
       TurnLeft()
     end
   else 
-    while (FacingIndex == faceIndex) do 
+    while (facingIndex == faceIndex) do 
       TurnRight()
     end
   end
 end
 
 function MoveBot(direction, times)
-  print("IM GOING TO MOVE NOW "..direction.." "..times)
     for execute = 1, times do
       movementdirection[direction]();
     end 
 end 
+-- basics 
+function CheckFuelLevel()
+  local currentFuelLevel = turtle.getFuelLevel()
+  if (currentFuelLevel < 50) then 
+
+  end
+end 
+function GoBackToStart()
+
+end
+function Dig()
+  turtle.()
+end
