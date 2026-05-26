@@ -6,13 +6,35 @@ function MainFunction()
     CheckForBlock(InspectForward)
     if (InspectFound and string.match(InspectResults, treeLog)) then 
       ChopTreeRoot()
-      BeginLevelLogChecks()
+      CheckForBlock(InspectUp)
       while (InspectFound) do 
+        Dig(DigUp)
+        MoveBot(MovementUp)
         BeginLevelLogChecks()
         CheckForBlock(InspectUp)
       end 
+      ReturnBackToLine()
     end 
   end
+end
+function PickUpItems()
+end
+function Replant()
+  FaceDirection(FacingRight)
+end
+function ReturnBackToLine()
+  ReturnToRoot()
+  PickUpItems()
+  FaceDirection(FacingLeft)
+  MoveBot(MovementForward) 
+end
+function ReturnToRoot()
+  repeat
+    CheckForBlock(InspectDown)
+    if (InspectFound == false) then
+      MoveBot(MovementDown)
+    end 
+  until InspectFound == true
 end
 
 function ChopTreeRoot() 
@@ -21,6 +43,7 @@ function ChopTreeRoot()
   TurnRight()
   Dig(DigForward)
   MoveBot(MovementForward)
+  BeginLevelLogChecks()
 end 
 
 function BeginLevelLogChecks()
