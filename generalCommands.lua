@@ -6,19 +6,39 @@ MovementDown = 2
 MovementForward = 3
 MovementBackwards = 4
 local movementDirection = {
-  ["Up"] =  function() turtle.up() end,
-  ["Down"] = function() turtle.down() end,
-  ["Forward"] = function() turtle.forward() end,
-  ["Backwards"] = function() turtle.back() end
+  [1] =  function() turtle.up() end,
+  [2] = function() turtle.down() end,
+  [3] = function() turtle.forward() end,
+  [4] = function() turtle.back() end
+}
+
+--- place enums wish version
+PlaceUp = 1
+PlaceDown = 2
+PlaceForward = 3
+local placeDirection = {
+  [1] =  function() turtle.placeUp() end,
+  [2] = function() turtle.placeDown() end,
+  [3] = function() turtle.place() end,
+}
+
+--- drop enums wish version
+DropUp = 1
+DropDown = 2
+DropForward = 3
+local dropDirection = {
+  [1] =  function() turtle.dropUp() end,
+  [2] = function() turtle.dropDown() end,
+  [3] = function() turtle.drop() end,
 }
 -- dig enums wish version 
 DigUp = 1
 DigDown = 2
 DigForward = 3
 local digDirection = {
-  ["Up"] =  function() turtle.digUp() end,
-  ["Down"] = function() turtle.digDown() end,
-  ["Forward"] = function() turtle.dig() end,
+  [1] =  function() turtle.digUp() end,
+  [2] = function() turtle.digDown() end,
+  [3] = function() turtle.dig() end,
 }
 -- inspect enums wish version
 InspectFound = false 
@@ -27,9 +47,9 @@ InspectUp = 1
 InspectDown = 2
 InspectForward = 3
 local inspectDirection = {
-  ["Up"] =  function() return turtle.inspectUp() end,
-  ["Down"] = function() return turtle.inspectDown() end,
-  ["Forward"] = function() return turtle.inspect() end,
+  [1] =  function() return turtle.inspectUp() end,
+  [2] = function() return turtle.inspectDown() end,
+  [3] = function() return turtle.inspect() end,
 }
 --- facing  enums wish version
 FacingFront = 1
@@ -59,18 +79,21 @@ function CalculateValidFacingIndex(index)
 end
 
 function FaceDirection(faceIndex)
-  if (faceIndex == CalculateValidFacingIndex(faceIndex + 1)) then
-    while (facingIndex == faceIndex) do 
+  if (faceIndex == CalculateValidFacingIndex(facingIndex + 1)) then
+    while (facingIndex ~= faceIndex) do 
       TurnLeft()
     end
   else 
-    while (facingIndex == faceIndex) do 
+    while (facingIndex ~= faceIndex) do 
       TurnRight()
     end
   end
 end
 
 function MoveBot(direction, times)
+  if (times == nil) then 
+    times = 1
+  end 
     for execute = 1, times do
       movementDirection[direction]();
       CheckFuelLevel()
@@ -97,5 +120,59 @@ function Dig(digIndex)
 end
 -- use enum
 function CheckForBlock(inspectIndex)
-  InspectFound,InspectResults = inspectDirection[inspectIndex]
+  InspectFound,InspectResults = inspectDirection[inspectIndex]()
+  if (InspectResults == nil) then 
+    print("not found")
+    InspectFound = false
+    InspectResults = ""
+  else 
+    InspectResults = InspectResults.name
+  end
+  print(InspectResults)
 end
+
+function FindItem(itemToFind)
+  for loop = 1, 16 do 
+    local itemDetail = turtle.getItemDetail(loop)
+    if (itemDetail ~= nil and string.match(itemDetail.name, itemToFind)) then 
+      return loop
+    end
+  end
+  print("not found")
+  return nil
+end
+
+function SafePlace(itemName,placeIndex)
+   local slot = FindItem(itemName)
+   if (slot == nil) then 
+    return false;
+   end
+   Place(slot, placeIndex)
+end
+
+function Place(itemSlot,placeIndex )
+  turtle.select(itemSlot)
+  placeDirection[placeIndex]()
+end 
+
+function EmptyInv(dropIndex)
+  for loop = 1,16 do 
+    dropItem(loop, dropIndex)
+  end
+end
+
+function dropItem(itemSlot, dropIndex)
+  turtle.select(itemSlot)
+  local itemDetails = turtle.getItemDetail()
+  if (itemDetails == nil) then 
+    return nil
+  end
+  dropDirection[dropIndex]()
+end
+
+function SuckAround()
+  for loop = 1,4 do 
+    turtle.suck()
+    TurnLeft()
+  end 
+end 

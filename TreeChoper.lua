@@ -1,5 +1,7 @@
 local gc = require("generalCommands")
 local treeLog = "menril_log"
+local endOfLine = "cobblestone"
+local menrilSampling = "menril_sapling"
 function MainFunction()
   while true do 
     MoveBot(MovementForward, 1)
@@ -14,19 +16,39 @@ function MainFunction()
         CheckForBlock(InspectUp)
       end 
       ReturnBackToLine()
+      Replant()
+    elseif (InspectFound and string.match(InspectResults, endOfLine)) then
+      EndOfLine()
     end 
   end
+  
 end
-function PickUpItems()
+function EndOfLine()
+  MoveBot(MovementUp)
+  FaceDirection(FacingBack)
+  CheckForBlock(InspectForward)
+  while InspectFound == false do 
+    MoveBot(MovementForward)
+    CheckForBlock(InspectForward)
+  end
+  Reset()
+end
+function Reset()
+  FaceDirection(FacingFront)
+  MoveBot(MovementDown)
+  EmptyInv(DropDown)
 end
 function Replant()
   FaceDirection(FacingRight)
+  SafePlace(menrilSampling, PlaceForward)
+  FaceDirection(FacingFront)
 end
 function ReturnBackToLine()
   ReturnToRoot()
-  PickUpItems()
+  SuckAround()
   FaceDirection(FacingLeft)
   MoveBot(MovementForward) 
+  FaceDirection(FacingFront)
 end
 function ReturnToRoot()
   repeat
